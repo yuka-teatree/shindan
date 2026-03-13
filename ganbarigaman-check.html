@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたの頑張り・我慢度チェック｜I love me.</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --peach:   #fbd5be;
+  --peach2:  #f7a98a;
+  --peach3:  #f08060;
+  --lilac:   #e8d8f8;
+  --lilac2:  #c0a0e0;
+  --lilac3:  #9070c8;
+  --mint:    #c8ead8;
+  --mint2:   #70c0a0;
+  --rose:    #f8c0d0;
+  --rose2:   #e8809a;
+  --gold:    #f8e080;
+  --gold2:   #d8a830;
+  --cream:   #fdf8f0;
+  --warm:    #faf4ec;
+  --white:   #ffffff;
+  --char:    #3a3038;
+  --mid:     #806878;
+  --light:   #e8d8e8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  background: var(--warm);
+  color: var(--char);
+  min-height: 100vh;
+}
+
+/* ── BG ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 0% 0%,   rgba(251,213,190,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 100% 20%, rgba(232,216,248,0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 30% 100%, rgba(200,234,216,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 80% 80%,  rgba(248,192,208,0.3) 0%, transparent 55%);
+}
+
+/* ── SCREENS ── */
+.screen { display:none; position:relative; z-index:1; }
+.screen.active { display:block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── INTRO ── */
+.intro {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 52px 24px 60px;
+  text-align: center;
+}
+.intro-badge {
+  display:inline-block;
+  background: rgba(192,160,224,0.2);
+  border: 1px solid rgba(192,160,224,0.4);
+  color: var(--lilac3);
+  font-size: 0.7rem; letter-spacing: 2px;
+  padding: 5px 16px; border-radius: 100px;
+  margin-bottom: 20px;
+}
+.intro h1 {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 7vw, 2.8rem);
+  background: linear-gradient(135deg, #c87090, #a070c0, #60b090);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1.15; margin-bottom: 10px;
+}
+.intro-sub {
+  font-size: 1rem; color: var(--mid); margin-bottom: 6px; font-weight: 300; line-height: 1.6;
+}
+.intro-desc {
+  font-size: 0.82rem; color: var(--mid); line-height: 1.8; margin: 18px 0 28px;
+}
+.intro-time {
+  display:inline-flex; align-items:center; gap:6px;
+  background: rgba(255,255,255,0.7); border-radius: 100px;
+  padding: 6px 16px; font-size: 0.78rem; color: var(--mid);
+  margin-bottom: 28px;
+}
+.start-btn {
+  display: block; width: 100%;
+  background: linear-gradient(135deg, #d080a0, #a070c0, #60b090);
+  color: #fff; border: none;
+  padding: 16px; border-radius: 100px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 1rem; font-weight: 500;
+  cursor: pointer; letter-spacing: 1px;
+  box-shadow: 0 6px 24px rgba(160,112,192,0.35);
+  transition: all 0.25s;
+}
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(160,112,192,0.45); }
+
+.intro-illust {
+  font-size: 3.5rem; margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}
+}
+
+/* ── QUIZ ── */
+.quiz-wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* section label */
+.section-banner {
+  border-radius: 16px; padding: 14px 20px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.sb-ganbari { background: linear-gradient(120deg, rgba(251,213,190,0.7), rgba(247,169,138,0.4)); border: 1px solid rgba(247,169,138,0.5); }
+.sb-gaman   { background: linear-gradient(120deg, rgba(232,216,248,0.7), rgba(192,160,224,0.4)); border: 1px solid rgba(192,160,224,0.5); }
+.sb-icon { font-size: 1.4rem; }
+.sb-info {}
+.sb-label { font-size: 0.68rem; letter-spacing: 2px; color: var(--mid); margin-bottom: 2px; }
+.sb-title { font-size: 1rem; font-weight: 700; }
+
+/* progress */
+.progress-wrap { margin-bottom: 24px; }
+.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.progress-label { font-size: 0.75rem; color: var(--mid); }
+.progress-pct   { font-size: 0.8rem; font-weight: 700; color: var(--lilac3); }
+.progress-bar { height: 6px; background: var(--light); border-radius: 100px; overflow: hidden; }
+.progress-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, #d080a0, #a070c0, #60b090);
+  transition: width 0.5s ease;
+}
+
+/* question card */
+.q-card {
+  background: var(--white);
+  border: 1px solid rgba(200,160,220,0.2);
+  border-radius: 20px;
+  padding: 26px 22px;
+  box-shadow: 0 4px 20px rgba(160,100,180,0.08);
+  margin-bottom: 16px;
+}
+.q-num {
+  font-size: 0.68rem; letter-spacing: 2px; color: var(--lilac3); margin-bottom: 10px;
+}
+.q-text {
+  font-size: 1rem; font-weight: 500; line-height: 1.6; margin-bottom: 20px;
+}
+
+/* options */
+.options { display: flex; flex-direction: column; gap: 9px; }
+.opt-btn {
+  padding: 12px 16px;
+  border: 2px solid var(--light);
+  border-radius: 14px;
+  background: var(--warm);
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 0.86rem; color: var(--char);
+  cursor: pointer; text-align: left;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 10px;
+}
+.opt-btn:hover { border-color: var(--lilac2); background: rgba(232,216,248,0.2); }
+.opt-btn.selected {
+  border-color: var(--lilac3);
+  background: linear-gradient(135deg, rgba(232,216,248,0.5), rgba(200,234,216,0.3));
+  color: var(--char);
+}
+.opt-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* nav */
+.nav-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 20px;
+}
+.nav-back {
+  background: transparent; border: 1px solid var(--light);
+  color: var(--mid); padding: 10px 20px; border-radius: 100px;
+  font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.82rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.nav-back:hover { border-color: var(--lilac2); }
+.nav-next {
+  background: linear-gradient(135deg, var(--lilac3), var(--mint2));
+  color: #fff; border: none; padding: 12px 28px; border-radius: 100px;
+  font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.86rem;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(144,112,200,0.3);
+}
+.nav-next:hover { opacity: 0.88; transform: translateY(-1px); }
+.nav-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── RESULT ── */
+.result-wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
+}
+.result-header { text-align: center; margin-bottom: 28px; }
+.result-eyebrow { font-size: 0.72rem; letter-spacing: 2px; color: var(--mid); margin-bottom: 10px; }
+.result-type {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  line-height: 1.3; margin-bottom: 8px;
+}
+.result-tag {
+  display: inline-block;
+  padding: 5px 18px; border-radius: 100px;
+  font-size: 0.76rem; font-weight: 500;
+  margin-bottom: 16px;
+}
+
+/* score bars */
+.score-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-bottom: 22px;
+}
+.score-card {
+  background: var(--white); border-radius: 16px;
+  padding: 18px 16px; text-align: center;
+  border: 1px solid rgba(200,160,220,0.2);
+  box-shadow: 0 3px 14px rgba(160,100,180,0.07);
+}
+.sc-label { font-size: 0.72rem; color: var(--mid); margin-bottom: 8px; }
+.sc-score {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 2.4rem; font-weight: 700; line-height: 1;
+  margin-bottom: 4px;
+}
+.sc-max { font-size: 0.7rem; color: var(--mid); }
+.sc-bar { height: 6px; background: var(--light); border-radius: 100px; margin-top: 10px; overflow: hidden; }
+.sc-fill { height: 100%; border-radius: 100px; transition: width 0.8s ease; }
+.fill-ganbari { background: linear-gradient(90deg, var(--peach2), var(--rose2)); }
+.fill-gaman   { background: linear-gradient(90deg, var(--lilac2), var(--lilac3)); }
+
+/* result message */
+.result-card {
+  background: var(--white);
+  border-radius: 20px; padding: 24px 22px;
+  border: 1px solid rgba(200,160,220,0.2);
+  box-shadow: 0 4px 20px rgba(160,100,180,0.08);
+  margin-bottom: 16px;
+}
+.rc-icon { font-size: 2rem; margin-bottom: 10px; }
+.rc-title { font-size: 1rem; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+.rc-body  { font-size: 0.86rem; color: var(--mid); line-height: 1.8; }
+.rc-body strong { color: var(--char); }
+
+/* advice pills */
+.advice-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.advice-pill {
+  background: var(--cream); border: 1px solid var(--light);
+  border-radius: 100px; padding: 5px 13px;
+  font-size: 0.76rem; color: var(--char);
+}
+
+/* share → LINE */
+.line-register-section { text-align: center; margin-top: 24px; }
+.line-register-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #06c755; color: #fff;
+  padding: 15px 32px; border-radius: 100px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 5px 20px rgba(6,199,85,0.35);
+  transition: all 0.25s;
+}
+.line-register-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(6,199,85,0.45); }
+.line-register-note { font-size: 0.74rem; color: var(--mid); margin-top: 10px; }
+.energy-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #a070c0, #6dbfa8);
+  color: #fff; padding: 15px 32px; border-radius: 100px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 5px 20px rgba(160,112,192,0.35);
+  transition: all 0.25s; margin-top: 8px;
+}
+.energy-btn:hover { transform: translateY(-2px); }
+.cta-btn-row { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.retry-btn {
+  display: block; width: 100%; margin-top: 16px;
+  background: transparent; border: 1.5px solid var(--light);
+  color: var(--mid); padding: 12px;
+  border-radius: 100px; font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 0.86rem; cursor: pointer; transition: all 0.2s;
+}
+.retry-btn:hover { border-color: var(--lilac2); color: var(--lilac3); }
+
+.program-cta {
+  background: linear-gradient(135deg, rgba(251,213,190,0.6), rgba(232,216,248,0.6));
+  border: 1px solid rgba(192,160,224,0.35);
+  border-radius: 20px; padding: 22px;
+  text-align: center; margin-top: 16px;
+}
+.cta-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+.cta-body  { font-size: 0.8rem; color: var(--mid); line-height: 1.7; margin-bottom: 14px; }
+.cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #d080a0, #a070c0);
+  color: #fff; text-decoration: none;
+  padding: 11px 28px; border-radius: 100px;
+  font-size: 0.86rem; font-weight: 500;
+  box-shadow: 0 4px 16px rgba(160,112,192,0.3);
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ INTRO ══════════════ -->
+<div class="screen active" id="screen-intro">
+  <div class="intro">
+    <div class="intro-badge">無料診断 ｜ I love me.</div>
+    <div class="intro-illust">🌸</div>
+    <h1>あなたの<br>頑張り・我慢度<br>チェック</h1>
+    <div class="intro-sub">あなたは今、どのくらい自分を後回しにしていますか？</div>
+    <div class="intro-desc">
+      行動パターンと身体のサインから<br>
+      「頑張り度」「我慢度」を数値化します。<br>
+      最後に、今のあなたへのメッセージをお届けします。
+    </div>
+    <div class="intro-time">⏱ 所要時間 約2〜3分 ｜ 全16問</div>
+    <button class="start-btn" onclick="startQuiz()">診断スタート →</button>
+  </div>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div class="screen" id="screen-quiz">
+  <div class="quiz-wrap">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label" id="progressLabel">1 / 16</span>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div id="sectionBanner"></div>
+    <div class="q-card">
+      <div class="q-num" id="qNum">Q01</div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="qOptions"></div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-back" id="btnBack" onclick="prevQ()">← 戻る</button>
+      <button class="nav-next" id="btnNext" onclick="nextQ()" disabled>次へ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RESULT ══════════════ -->
+<div class="screen" id="screen-result">
+  <div class="result-wrap">
+    <div class="result-header">
+      <div class="result-eyebrow">診断結果</div>
+      <div class="result-type" id="resultType"></div>
+      <div class="result-tag" id="resultTag"></div>
+    </div>
+    <div class="score-cards">
+      <div class="score-card">
+        <div class="sc-label">🔥 頑張り度</div>
+        <div class="sc-score" id="scoreG" style="color:#e08080">0</div>
+        <div class="sc-max">/ 40点</div>
+        <div class="sc-bar"><div class="sc-fill fill-ganbari" id="barG" style="width:0%"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="sc-label">💜 我慢度</div>
+        <div class="sc-score" id="scoreM" style="color:#a070c0">0</div>
+        <div class="sc-max">/ 40点</div>
+        <div class="sc-bar"><div class="sc-fill fill-gaman" id="barM" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="resultCards"></div>
+    <div id="ctaSection"></div>
+    <button class="retry-btn" onclick="retry()">もう一度診断する</button>
+  </div>
+</div>
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  QUESTIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const questions = [
+  // 頑張り度 (0-7: 8問 × 最大5点 = 40点)
+  { section:'ganbari', text:'どこに行っても、周りから頼られたり認められることが多い' },
+  { section:'ganbari', text:'仕事や家事など、人より早くテキパキこなす方だ' },
+  { section:'ganbari', text:'人がやらないことを、気づいたら率先してやっている' },
+  { section:'ganbari', text:'自分のことより、人の都合や気持ちを優先しがちだ' },
+  { section:'ganbari', text:'外では笑顔でいることが多く、弱いところを見せられない' },
+  { section:'ganbari', text:'休んでいると「もっとやれることがある」と罪悪感を感じる' },
+  { section:'ganbari', text:'人から頼まれると、断るのが苦手でつい引き受けてしまう' },
+  { section:'ganbari', text:'「ありがとう」「すごいね」と言われると、ほっとする・安心する' },
+
+  // 我慢度 (8-15: 8問 × 最大5点 = 40点)
+  { section:'gaman', text:'呼吸が浅い、またはため息をよくついていると感じる' },
+  { section:'gaman', text:'食べるのが早く、味わって食べることが少ない' },
+  { section:'gaman', text:'肩こりや背中の張りが慢性的にある' },
+  { section:'gaman', text:'お腹が硬い・張りやすい・腸の調子が安定しない' },
+  { section:'gaman', text:'便秘がちである、または便秘と下痢を繰り返す' },
+  { section:'gaman', text:'疲れているのになかなか眠れない、または眠りが浅い' },
+  { section:'gaman', text:'冷え性である、または手足が冷えやすい' },
+  { section:'gaman', text:'「本当はこうしたかった」と後から思うことがよくある' },
+];
+
+const opts = [
+  { label:'とても当てはまる',       score:5 },
+  { label:'まあ当てはまる',         score:4 },
+  { label:'どちらともいえない',     score:3 },
+  { label:'あまり当てはまらない',   score:2 },
+  { label:'当てはまらない',         score:1 },
+];
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  RESULTS DATA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function getResult(gScore, mScore) {
+  const gLv = gScore >= 32 ? 'H' : gScore >= 22 ? 'M' : 'L';
+  const mLv = mScore >= 32 ? 'H' : mScore >= 22 ? 'M' : 'L';
+  const key = gLv + mLv;
+
+  const results = {
+    HH: {
+      type: '満タン頑張り屋さん', emoji: '🔥',
+      tagBg: 'linear-gradient(135deg,#f7a98a,#e8809a)', tagColor: '#fff',
+      message: '頑張り度も我慢度も、どちらも高めです。あなたはずっと全力で走り続けてきたのではないでしょうか。それは本当にすごいことです。でも今、身体があなたに「少し休もう」とサインを送っています。',
+      detail: '外では笑顔で頼られる存在でありながら、内側では静かにたくさんのものを抱えてきたはず。その頑張りを認めてあげましょう。まず必要なのは「休む許可を自分に出すこと」です。',
+      advice: ['🫁 深呼吸から始めよう', '🤲 おなかに手を当てる時間を', '📝 感じたことを書き出してみて', '🌿 今日1つだけ「やめる」を決める'],
+      ctaType: 'high',
+      ctaMsg: '今すぐ休息が必要なあなたに、<strong>無料カウンセリング（30分）</strong>を実施中です。一人で抱え込まず、まずはお話しましょう。'
+    },
+    HM: {
+      type: 'がんばりすぎ予備軍', emoji: '🌸',
+      tagBg: 'linear-gradient(135deg,#f7a98a,#c0a0e0)', tagColor: '#fff',
+      message: '頑張る力はとても強いのに、身体はすでに少し疲れ始めているサインが出ています。このまま頑張り続けると、身体が先にストップをかけてくるかもしれません。',
+      detail: '「まだ大丈夫」と感じているうちに、少しずつ自分への投資を始めてみましょう。腸の状態を整えることが、感情の安定と直結しています。',
+      advice: ['🕐 1日5分だけ自分時間を', '🥗 食事をゆっくり味わう練習を', '💜 NOと言っていい場面を探して', '🌙 眠る前の呼吸ワークを'],
+      ctaType: 'mid',
+      ctaMsg: 'じんわり溜まっている疲れをそのままにせず、よかったら無料カウンセリングかエネルギー整体でスッキリしてみませんか？'
+    },
+    HL: {
+      type: '行動力あふれる頑張り屋', emoji: '⚡',
+      tagBg: 'linear-gradient(135deg,#f0d880,#f7a98a)', tagColor: '#7a5020',
+      message: '頑張り度は高いですが、身体はまだ比較的サインが少ない状態です。今のうちに自分のパターンに気づいておくことで、将来のバーンアウトを防げます。',
+      detail: '行動力と責任感はあなたの強み。その力を「自分のために使う」練習をしていきましょう。',
+      advice: ['🌱 頑張り癖に気づくことから', '📔 ジャーナリングを始めてみて', '🎯 自分の欲求を言語化する練習を', '✨ 「わたしのため」の行動を1つ増やす'],
+      ctaType: 'mid',
+      ctaMsg: 'じんわり溜まっている疲れをそのままにせず、よかったら無料カウンセリングかエネルギー整体でスッキリしてみませんか？'
+    },
+    MH: {
+      type: '内側が疲れているあなた', emoji: '💜',
+      tagBg: 'linear-gradient(135deg,#c0a0e0,#a0c8e0)', tagColor: '#fff',
+      message: '表面上は穏やかに見えても、身体の中には我慢が積み重なっているようです。腸の不調や身体の緊張は、心が「もう限界」と伝えているサインかもしれません。',
+      detail: '感じないふりをしてきた感情が、身体に出ている状態です。まず「身体の声を聞くこと」から始めてみましょう。',
+      advice: ['🤲 おなかのお手あてを毎日に', '🫁 腹式呼吸を意識して', '🌿 身体の緊張を感じる場所を探して', '💬 感じたことを誰かに話してみて'],
+      ctaType: 'high',
+      ctaMsg: '今すぐ休息が必要なあなたに、<strong>無料カウンセリング（30分）</strong>を実施中です。一人で抱え込まず、まずはお話しましょう。'
+    },
+    MM: {
+      type: 'じんわり疲れが溜まるタイプ', emoji: '🌙',
+      tagBg: 'linear-gradient(135deg,#c0e8d8,#c0a0e0)', tagColor: '#fff',
+      message: '頑張り度も我慢度も中くらい。「まあ大丈夫」と思いながら、気づかないうちにじんわりと疲れが溜まっているタイプです。',
+      detail: '「普通」の状態に慣れすぎて、本来の「楽」な状態を忘れているかもしれません。少しの変化で、驚くほど軽くなれます。',
+      advice: ['🌸 小さな「好き」を大切にして', '🍵 食事を1食だけ丁寧に食べる', '📝 今日の我慢を書き出してみて', '🌱 ゆるめる時間を意識的に作って'],
+      ctaType: 'mid',
+      ctaMsg: 'じんわり溜まっている疲れをそのままにせず、よかったら無料カウンセリングかエネルギー整体でスッキリしてみませんか？'
+    },
+    ML: {
+      type: 'バランスを保てている状態', emoji: '🌿',
+      tagBg: 'linear-gradient(135deg,#c0e8d8,#a8d8c0)', tagColor: '#306050',
+      message: '今のあなたは、比較的バランスが取れています。ただ、頑張り癖はあるので「意識的な休息」を取り入れていくとさらに整っていきます。',
+      detail: 'このまま自分のパターンに気づき続けることが、より深い自分との繋がりにつながります。',
+      advice: ['✨ 今の状態を大切に維持して', '🎯 次のステップは「本音に気づく」こと', '🌙 内側をさらに深めたいなら…', '🌱 直感を信頼する練習を始めて'],
+      ctaType: 'mid',
+      ctaMsg: 'じんわり溜まっている疲れをそのままにせず、よかったら無料カウンセリングかエネルギー整体でスッキリしてみませんか？'
+    },
+    LH: {
+      type: '身体が先に限界サイン', emoji: '🌊',
+      tagBg: 'linear-gradient(135deg,#a0c8e0,#c0a0e0)', tagColor: '#fff',
+      message: '意識の上では頑張っている感覚がなくても、身体はすでにたくさんの我慢を蓄積しています。「なんとなく不調が続く」のは、身体からのSOSです。',
+      detail: '腸の不調・身体の緊張は、過去から積み重なった感情のサインであることがあります。まず身体を整えることから始めましょう。',
+      advice: ['🫁 深い腹式呼吸を毎朝に', '🤲 おなかのお手あてを習慣化して', '🌿 腸に優しい食事を意識して', '💜 身体の声を無視しないで'],
+      ctaType: 'high',
+      ctaMsg: '今すぐ休息が必要なあなたに、<strong>無料カウンセリング（30分）</strong>を実施中です。一人で抱え込まず、まずはお話しましょう。'
+    },
+    LM: {
+      type: 'まだ気づいていないかも', emoji: '🔍',
+      tagBg: 'linear-gradient(135deg,#f8e080,#c0e8d8)', tagColor: '#706020',
+      message: '今は比較的楽な状態かもしれません。または、我慢や頑張りが「当たり前」になりすぎて、気づきにくくなっている可能性もあります。',
+      detail: 'このチェックを通じて、自分のパターンに気づくことが第一歩。じっくり自分を観察してみましょう。',
+      advice: ['📔 1週間、感情日記をつけてみて', '🌸 「何が好きか」を書き出してみて', '🕐 何も考えない時間を作って', '✨ 直感に従ってみる練習を'],
+      ctaType: 'mid',
+      ctaMsg: 'じんわり溜まっている疲れをそのままにせず、よかったら無料カウンセリングかエネルギー整体でスッキリしてみませんか？'
+    },
+    LL: {
+      type: '自分を大切にできているあなた', emoji: '✨',
+      tagBg: 'linear-gradient(135deg,#c0e8d8,#f8e080)', tagColor: '#406030',
+      message: '今のあなたは、比較的自分と仲良くできている状態です。頑張りすぎず、我慢しすぎず、自分のペースを守れています。',
+      detail: 'これを「当たり前」にしているあなたの力を、ぜひ大切に。さらに深く自分と繋がっていくことで、より豊かな毎日へ。',
+      advice: ['🌱 この状態を意識的に維持して', '✨ 直感を信頼してみて', '🎯 次は「本音で生きる」ステップへ', '💜 同じように悩む人の力になれる'],
+      ctaType: 'low',
+      ctaMsg: 'さらに心地よく過ごしたいあなたへ。波動を整えるエネルギー整体を体験してみてください。日々の浄化で、今の心地よさをさらに深めることができます。'
+    },
+  };
+
+  return results[key] || results['MM'];
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  STATE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let answers = new Array(questions.length).fill(null);
+let currentQ = 0;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  QUIZ LOGIC
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function startQuiz() {
+  showScreen('quiz');
+  renderQ();
+}
+
+function renderQ() {
+  const q = questions[currentQ];
+  const total = questions.length;
+  const pct = Math.round((currentQ / total) * 100);
+
+  document.getElementById('progressLabel').textContent = `${currentQ + 1} / ${total}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('qNum').textContent = 'Q' + String(currentQ + 1).padStart(2, '0');
+  document.getElementById('qText').textContent = q.text;
+
+  // section banner
+  const isGanbari = q.section === 'ganbari';
+  const prevSection = currentQ > 0 ? questions[currentQ-1].section : null;
+  const showBanner = currentQ === 0 || q.section !== prevSection;
+  const bannerEl = document.getElementById('sectionBanner');
+  if (showBanner) {
+    bannerEl.innerHTML = `
+      <div class="section-banner ${isGanbari ? 'sb-ganbari' : 'sb-gaman'}">
+        <div class="sb-icon">${isGanbari ? '🔥' : '💜'}</div>
+        <div class="sb-info">
+          <div class="sb-label">${isGanbari ? 'PART 1' : 'PART 2'}</div>
+          <div class="sb-title">${isGanbari ? '行動・思考パターン（頑張り度）' : '身体のサイン（我慢度）'}</div>
+        </div>
+      </div>`;
+  } else {
+    bannerEl.innerHTML = '';
+  }
+
+  // options
+  const optsEl = document.getElementById('qOptions');
+  optsEl.innerHTML = opts.map((o, i) => `
+    <button class="opt-btn ${answers[currentQ] === i ? 'selected' : ''}"
+            onclick="selectOpt(${i})">
+      ${o.label}
+    </button>
+  `).join('');
+
+  document.getElementById('btnBack').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('btnNext').disabled = answers[currentQ] === null;
+  document.getElementById('btnNext').textContent = currentQ === total - 1 ? '結果を見る ✨' : '次へ →';
+}
+
+function selectOpt(i) {
+  answers[currentQ] = i;
+  document.querySelectorAll('.opt-btn').forEach((b, idx) => {
+    b.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('btnNext').disabled = false;
+}
+
+function nextQ() {
+  if (answers[currentQ] === null) return;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQ();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    showResult();
+  }
+}
+
+function prevQ() {
+  if (currentQ > 0) { currentQ--; renderQ(); }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  RESULT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function showResult() {
+  let gScore = 0, mScore = 0;
+  questions.forEach((q, i) => {
+    const s = answers[i] !== null ? opts[answers[i]].score : 0;
+    if (q.section === 'ganbari') gScore += s;
+    else mScore += s;
+  });
+
+  const r = getResult(gScore, mScore);
+
+  document.getElementById('resultType').textContent = r.emoji + ' ' + r.type;
+  const tagEl = document.getElementById('resultTag');
+  tagEl.textContent = `頑張り度 ${gScore}点 ／ 我慢度 ${mScore}点`;
+  tagEl.style.background = r.tagBg;
+  tagEl.style.color = r.tagColor;
+
+  // scores
+  document.getElementById('scoreG').textContent = gScore;
+  document.getElementById('scoreM').textContent = mScore;
+  setTimeout(() => {
+    document.getElementById('barG').style.width = (gScore / 40 * 100) + '%';
+    document.getElementById('barM').style.width = (mScore / 40 * 100) + '%';
+  }, 200);
+
+  // cards
+  document.getElementById('resultCards').innerHTML = `
+    <div class="result-card">
+      <div class="rc-icon">${r.emoji}</div>
+      <div class="rc-title">${r.message}</div>
+      <div class="rc-body">${r.detail}</div>
+      <div class="advice-row">
+        ${r.advice.map(a => `<span class="advice-pill">${a}</span>`).join('')}
+      </div>
+    </div>
+    <div class="result-card" style="background:linear-gradient(135deg,rgba(251,213,190,0.2),rgba(232,216,248,0.2));">
+      <div class="rc-icon">💌</div>
+      <div class="rc-title">今のあなたへのメッセージ</div>
+      <div class="rc-body">${r.ctaMsg}</div>
+    </div>
+  `;
+
+  // CTA section - 3パターンで出し分け
+  const LINE_URL = 'https://lin.ee/f4NXcan'; // 公式LINE
+  let ctaHtml = '';
+  if (r.ctaType === 'high') {
+    ctaHtml = `
+      <div class="program-cta">
+        <div class="cta-title">💌 今すぐ休息が必要なあなたへ</div>
+        <div class="cta-body">無料カウンセリングをご希望の方は、公式LINEに登録→チャットに<strong>『無料カウンセリング』</strong>と送ってください。</div>
+        <div class="cta-btn-row">
+          <a class="line-register-btn" href="${LINE_URL}" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 2.7 1.3 5.12 3.35 6.82L4.5 22l4.36-1.45C9.84 20.84 10.9 21 12 21c5.52 0 10-4.03 10-9S17.52 2 12 2z"/></svg>
+            公式LINEに登録する
+          </a>
+        </div>
+      </div>`;
+  } else if (r.ctaType === 'mid') {
+    ctaHtml = `
+      <div class="program-cta">
+        <div class="cta-title">💌 あなたへのご案内</div>
+        <div class="cta-body">カウンセリングをご希望の方は、公式LINE登録後チャットに<strong>『無料カウンセリング』</strong>と送ってください。<br><br>エネルギー整体を体験したい方は、メニューの『予約』から<strong>❷エネルギー整体</strong>を選択、チャットにお名前をお送りください。</div>
+        <div class="cta-btn-row">
+          <a class="line-register-btn" href="${LINE_URL}" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 2.7 1.3 5.12 3.35 6.82L4.5 22l4.36-1.45C9.84 20.84 10.9 21 12 21c5.52 0 10-4.03 10-9S17.52 2 12 2z"/></svg>
+            公式LINEに登録する
+          </a>
+        </div>
+      </div>`;
+  } else {
+    ctaHtml = `
+      <div class="program-cta">
+        <div class="cta-title">✨ さらに心地よく過ごしたいあなたへ</div>
+        <div class="cta-body">波動を整えるエネルギー整体を体験してみてください！<br>日々の浄化で、今の心地よさをさらに深めることができます。</div>
+        <div class="cta-btn-row">
+          <a class="energy-btn" href="${LINE_URL}" target="_blank">
+            ✨ エネルギー整体を体験する
+          </a>
+          <div class="line-register-note">公式LINEからご予約いただけます</div>
+        </div>
+      </div>`;
+  }
+  document.getElementById('ctaSection').innerHTML = ctaHtml;
+
+  showScreen('result');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function shareX() {}
+
+function retry() {
+  answers = new Array(questions.length).fill(null);
+  currentQ = 0;
+  showScreen('intro');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+</script>
+</body>
+</html>
