@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I love me. ～わたしを愛し、わたしを生きる。～</title>
+<link href="https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&family=Zen+Maru+Gothic:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #F2A7C3;
+    --pink-light: #FADADF;
+    --pink-pale: #FFF0F4;
+    --lavender: #C9B8E8;
+    --lavender-light: #E8E2F7;
+    --lavender-pale: #F5F2FF;
+    --rose: #E07FA0;
+    --mauve: #A889C9;
+    --text: #3D2B3B;
+    --text-soft: #7B5E72;
+    --white: #FFFCFD;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100svh;
+    background: linear-gradient(160deg, #FFF0F4 0%, #F5F2FF 50%, #FDE8EF 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,184,232,0.3) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(242,167,195,0.25) 0%, transparent 70%);
+    bottom: -80px; left: -80px;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--mauve);
+    border: 1px solid var(--lavender);
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-title {
+    font-family: 'Oleo Script', cursive;
+    font-size: clamp(52px, 14vw, 84px);
+    font-weight: 400;
+    background: linear-gradient(135deg, #9B59D4 0%, #D4607A 60%, #E8834A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-subtitle {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: clamp(14px, 3.8vw, 19px);
+    font-weight: 400;
+    color: var(--mauve);
+    letter-spacing: 0.12em;
+    margin-bottom: 36px;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-catch {
+    font-size: clamp(16px, 4.5vw, 20px);
+    font-weight: 500;
+    color: var(--text);
+    line-height: 2;
+    margin-bottom: 40px;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+
+  .hero-catch span {
+    background: linear-gradient(transparent 60%, rgba(242,167,195,0.4) 60%);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--pink);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(to bottom, var(--pink), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* =====共通 ===== */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--mauve);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .section-label::before, .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 40px;
+    height: 1px;
+    background: var(--lavender);
+  }
+
+  .section-title {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: clamp(20px, 5.5vw, 28px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .section-title em {
+    font-style: normal;
+    color: var(--rose);
+  }
+
+  section {
+    padding: 72px 24px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  /* ===== 2ページ目: PROBLEM ===== */
+  .problem-bg {
+    background: linear-gradient(135deg, #FFF0F4, #F5F2FF);
+    padding: 72px 24px;
+  }
+
+  .problem-inner {
+    background: rgba(255,255,255,0.5);
+    border-radius: 24px;
+    padding: 48px 32px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .problem-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .problem-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-soft);
+    background: rgba(255,255,255,0.8);
+    padding: 16px 20px;
+    border-radius: 14px;
+    border-left: 3px solid var(--pink);
+  }
+
+  .problem-list li::before {
+    content: '✦';
+    color: var(--pink);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .problem-close {
+    text-align: center;
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(13px, 3.4vw, 15px);
+    font-weight: 500;
+    color: var(--rose);
+    line-height: 1.9;
+  }
+
+  /* ===== 3ページ目: STORY ===== */
+  .story-bg {
+    background: linear-gradient(160deg, #FBF0FF, #FFF0F6, #EEE8FA);
+    padding: 72px 24px;
+  }
+
+  .story-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .story-text {
+    font-size: 15px;
+    color: var(--text-soft);
+    line-height: 2;
+    margin-bottom: 20px;
+  }
+
+  .story-key-message {
+    background: linear-gradient(135deg, #7B3FA8, #C0507A);
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    margin: 32px 0 28px;
+    box-shadow: 0 12px 40px rgba(123,63,168,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .story-key-message::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.12), transparent 60%);
+  }
+
+  .story-key-message p {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: clamp(19px, 5.5vw, 26px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.7;
+    letter-spacing: 0.06em;
+    position: relative;
+  }
+
+  .story-follow {
+    font-size: 15px;
+    color: var(--text-soft);
+    line-height: 2;
+    margin-bottom: 20px;
+  }
+
+  .story-insight {
+    background: rgba(201,184,232,0.18);
+    border-left: 3px solid var(--lavender);
+    border-radius: 0 16px 16px 0;
+    padding: 20px 24px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: clamp(14px, 3.8vw, 16px);
+    color: var(--text);
+    line-height: 2;
+    margin: 24px 0 28px;
+  }
+
+  /* ===== 4ページ目: PROGRAM ===== */
+  .program-bg {
+    padding: 72px 24px;
+  }
+
+  .program-inner {
+    background: linear-gradient(160deg, var(--lavender-pale), var(--pink-pale));
+    border-radius: 28px;
+    padding: 56px 32px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 36px;
+  }
+
+  .step {
+    background: rgba(255,255,255,0.85);
+    border-radius: 18px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--lavender));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 8px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .step-num .step-n {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .step-num .step-word {
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .step-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(16px, 4.5vw, 20px);
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ===== 5ページ目: CONTENTS ===== */
+  .contents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .content-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 14px;
+    padding: 20px 22px;
+    border: 1px solid rgba(201,184,232,0.35);
+  }
+
+  .content-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--pink-light), var(--lavender-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .content-item-text strong {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ===== 6ページ目: FOR WHOM ===== */
+  .forwhom-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .forwhom-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-soft);
+  }
+
+  .forwhom-list li::before {
+    content: '♡';
+    color: var(--rose);
+    flex-shrink: 0;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* ===== 7ページ目: PROFILE ===== */
+  .profile-bg {
+    padding: 0 24px 72px;
+  }
+
+  .profile-section {
+    background: linear-gradient(135deg, #FFF6F9, #F7F3FF);
+    border-radius: 28px;
+    padding: 48px 32px;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--lavender));
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+  }
+
+  .profile-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .profile-role {
+    font-size: 13px;
+    color: var(--mauve);
+    letter-spacing: 0.05em;
+    margin-bottom: 28px;
+    line-height: 1.9;
+  }
+
+  .profile-text {
+    font-size: 14px;
+    color: var(--text-soft);
+    line-height: 2.1;
+    text-align: left;
+  }
+
+  /* ===== 8ページ目: FAQ ===== */
+  .faq-section { text-align: left; }
+
+  .faq-item {
+    border-bottom: 1px solid rgba(201,184,232,0.3);
+    padding: 22px 0;
+  }
+
+  .faq-q {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .faq-q::before {
+    content: 'Q';
+    color: var(--rose);
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .faq-a {
+    font-size: 14px;
+    color: var(--text-soft);
+    line-height: 1.9;
+    padding-left: 26px;
+  }
+
+  /* ===== DIVIDER ===== */
+  .petal-divider {
+    text-align: center;
+    color: var(--pink);
+    font-size: 18px;
+    letter-spacing: 12px;
+    padding: 16px 0;
+    opacity: 0.6;
+  }
+
+  /* ===== 9ページ目: CTA ===== */
+  .cta-section {
+    background: linear-gradient(160deg, #FDE8EF, #EEE8FA, #FDE8EF);
+    padding: 72px 24px 100px;
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .cta-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .cta-sub {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin-bottom: 40px;
+    line-height: 2.1;
+  }
+
+  .cta-note-small {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--text-soft);
+    background: rgba(255,255,255,0.6);
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin-top: 8px;
+    margin-bottom: 32px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--rose) 0%, var(--mauve) 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    padding: 20px 48px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 8px 32px rgba(224,127,160,0.35);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    border-radius: inherit;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(224,127,160,0.45);
+  }
+
+  .cta-btn:active { transform: translateY(0); }
+
+  .cta-free {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--mauve);
+    letter-spacing: 0.08em;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    font-size: 11px;
+    color: var(--text-soft);
+    letter-spacing: 0.1em;
+    background: var(--pink-pale);
+  }
+
+  /* ===== SCROLL ANIMATION ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- 1ページ目: HERO -->
+<div class="hero">
+  <div class="hero-badge">腸活 × 潜在意識　3ヶ月オンラインプログラム　2025年9月スタート</div>
+  <h1 class="hero-title">I love me.</h1>
+  <p class="hero-subtitle">～わたしを愛し、わたしを生きる。～</p>
+  <p class="hero-catch">
+    腸活・健康投資をしても、なぜか不調は続く・・・。<br>
+    <span>いつも自分のことは後回しで、頑張ってきた。</span>
+  </p>
+  <div class="scroll-hint">scroll</div>
+</div>
+
+<!-- 2ページ目: PROBLEM -->
+<div class="problem-bg">
+  <div class="problem-inner reveal">
+    <div class="section-label">こんなこと、ありませんか？</div>
+    <h2 class="section-title">「休む」ことが<em>できない</em>、<br><em>無意識</em>で頑張ってしまう。</h2>
+    <ul class="problem-list">
+      <li>腸活・食事制限・ナチュラル製品・サプリetc. 続けているけれど、いまいちスッキリしない</li>
+      <li>健やかでいるために努力をしているけれど、心や身体が安定しない</li>
+      <li>自分より家族・周りを優先することが当たり前になっている</li>
+      <li>結果を得ていても、満たされない感覚がある。</li>
+      <li>「このままでいいのかな」と、ふとした瞬間に思う</li>
+    </ul>
+    <p class="problem-close">
+      そのモヤモヤは、食べ物や生活習慣だけが原因ではないかもしれません。
+    </p>
+  </div>
+</div>
+
+<!-- 3ページ目: STORY -->
+<div class="story-bg">
+  <div class="story-inner reveal">
+    <div class="section-label">わたしのストーリー</div>
+    <h2 class="section-title">長年の健康投資、でも病気をした<br>私が気づいたこと。</h2>
+    <p class="story-text">
+      サプリ・アロマ・自然療法・食事にも気を付けていた健康オタクの私が、2度の大病を経験しました。
+    </p>
+    <p class="story-text">
+      やっと気づいた、身体からのメッセージ。<br>
+      それは、
+    </p>
+
+    <div class="story-key-message">
+      <p>「あなたは、あなたをちゃんと見てる？」</p>
+    </div>
+
+    <p class="story-follow">
+      人に与えることは簡単にできるのに、<br>
+      与えてくれたときは受け取れない。
+    </p>
+
+    <div class="story-insight">
+      それは、「自分には受け取る資格がない」という<br>無意識の自己否定。
+    </div>
+
+    <p class="story-text">
+      そこからわたしの、<br>
+      「わたし」を観察する日々が始まりました。
+    </p>
+  </div>
+</div>
+
+<div class="petal-divider">✿ ✿ ✿</div>
+
+<!-- 4ページ目: PROGRAM -->
+<div class="program-bg">
+  <div class="program-inner reveal">
+    <div class="section-label">Program</div>
+    <h2 class="section-title">3ヶ月で、わたしを好きになる。</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">
+          <span style="font-size:8px;">Step</span>
+          <span class="step-n">1</span>
+          <span class="step-word">気づく</span>
+        </div>
+        <div class="step-title">Step 1 ｜ 気づく</div>
+      </div>
+      <div class="step">
+        <div class="step-num">
+          <span style="font-size:8px;">Step</span>
+          <span class="step-n">2</span>
+          <span class="step-word">手放す</span>
+        </div>
+        <div class="step-title">Step 2 ｜ 手放す</div>
+      </div>
+      <div class="step">
+        <div class="step-num">
+          <span style="font-size:8px;">Step</span>
+          <span class="step-n">3</span>
+          <span class="step-word">繋がる</span>
+        </div>
+        <div class="step-title">Step 3 ｜ 繋がる</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5ページ目: CONTENTS -->
+<section class="reveal">
+  <div class="section-label">提供内容</div>
+  <h2 class="section-title">プログラム内容</h2>
+  <div class="contents-list">
+    <div class="content-item">
+      <div class="content-icon">🎬</div>
+      <div class="content-item-text"><strong>動画コンテンツ</strong></div>
+    </div>
+    <div class="content-item">
+      <div class="content-icon">✋</div>
+      <div class="content-item-text"><strong>エネルギー整体（月1回 / 全3回）</strong></div>
+    </div>
+    <div class="content-item">
+      <div class="content-icon">💬</div>
+      <div class="content-item-text"><strong>個別カウンセリング（全3回）</strong></div>
+    </div>
+    <div class="content-item">
+      <div class="content-icon">📄</div>
+      <div class="content-item-text"><strong>各種資料 / ワークシート</strong></div>
+    </div>
+    <div class="content-item">
+      <div class="content-icon">✨</div>
+      <div class="content-item-text"><strong>遠隔全体ヒーリング</strong></div>
+    </div>
+  </div>
+</section>
+
+<div class="petal-divider">✿ ✿ ✿</div>
+
+<!-- 6ページ目: FOR WHOM -->
+<section class="reveal" style="text-align:left;">
+  <div class="section-label">こんな方へ</div>
+  <h2 class="section-title">こんな方に届けたいプログラムです</h2>
+  <ul class="forwhom-list">
+    <li>腸活や健康法を試してきたけれど、なかなか効果を感じられない</li>
+    <li>なんとなく満たされない感覚や、生きづらさを感じている</li>
+    <li>自分よりまわりを優先してしまい、自分を後回しにしがち</li>
+    <li>身体の不調が意識と関係しているかも、と感じている</li>
+    <li>誰かに頼るのではなく、自分自身で変化を起こしていきたい</li>
+    <li>本当の自分を知りたい。掘って、見つけたい。</li>
+  </ul>
+</section>
+
+<!-- 7ページ目: PROFILE -->
+<div class="profile-bg">
+  <div class="profile-section reveal">
+    <div class="section-label">ABOUT ME</div>
+    <div class="profile-avatar">🌿</div>
+    <div class="profile-name">ゆか</div>
+    <div class="profile-role">
+      腸セラピスト・エネルギー整体師<br>
+      杜のサロン teatree
+    </div>
+    <p class="profile-text">
+      千葉県柏市の自宅で、小さなサロンをしています。<br>
+      腸セラピーと波動調整を組み合わせ、身体だけでなくエネルギー体にも触れた唯一無二のセラピーを展開。<br><br>
+      自身の不調の経験から、健康に多くの時間とお金を費やしてきたからこそたどり着いた、<br>
+      【意識が不調を創り出している】という気づき。<br><br>
+      そして、最後の病気が肉体を動かす源となる『心臓-Heart-』だったことから、そのメッセージを受け取り、初めて"わたし（自分）"と向き合った中で、このプログラムが生まれました。<br><br>
+      3か月、一緒に伴走します。<br>
+      あなたが、ご自身で、「本来のじぶん」に戻っていくプロセスをサポートいたします。
+    </p>
+  </div>
+</div>
+
+<!-- 8ページ目: FAQ -->
+<section class="faq-section reveal">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">よくあるご質問</h2>
+  <div class="faq-item">
+    <div class="faq-q">遠方でも受けられますか？</div>
+    <div class="faq-a">はい、オンラインプログラムなので全国どこからでもご参加いただけます。エネルギー整体も遠隔で対応しています。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">忙しくても続けられますか？</div>
+    <div class="faq-a">週1本の動画視聴がベースです。お好きな時間に視聴でき、繰り返し見ることもできます。無理なく続けられる設計にしています。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">申し込みから参加までの流れを教えてください。</div>
+    <div class="faq-a">まず、このページの一番下にあるボタンから、無料カウンセリングにお申し込みください。30分ほどお話を聞かせていただき、プログラムが合っているかどうか一緒に確認いたします。</div>
+  </div>
+</section>
+
+<div class="petal-divider">✿ ✿ ✿</div>
+
+<!-- 9ページ目: CTA -->
+<div class="cta-section">
+  <div class="cta-inner reveal">
+    <h2 class="cta-title">
+      まず、お話を聞かせてください。
+    </h2>
+    <p class="cta-sub">
+      あなたの今の状況をお話ください。<br>
+      このプログラムがお役に立てるか一緒に確認しましょう！
+    </p>
+    <p class="cta-note-small">プログラムへの申込みではありませんので、ご安心ください。</p>
+    <br>
+    <a href="#" class="cta-btn">
+      ✦ 無料カウンセリングに申し込む ✦
+    </a>
+    <p class="cta-free">所要時間：約30分 ｜ オンライン（Zoom）｜ 完全無料</p>
+  </div>
+</div>
+
+<footer>
+  <p>杜のサロン teatree ｜ @salon_teatree_kashiwa</p>
+  <p style="margin-top: 8px;">© 2025 I love me. All rights reserved.</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
