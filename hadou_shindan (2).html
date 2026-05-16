@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>波動タイプ診断 | salon teatree</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --deep: #120d20;
+    --mid: #1f1535;
+    --accent: #c9a8f0;
+    --soft: #e8d8ff;
+    --muted: #8870aa;
+    --text: #f0eaf8;
+    --text2: #c4b0dd;
+    --card: rgba(255,255,255,0.05);
+    --card-border: rgba(201,168,240,0.2);
+    --radius: 14px;
+  }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Stars */
+  .starfield {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #e8d8ff;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: var(--a); } to { opacity: calc(var(--a) * 0.3); } }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* Header */
+  .site-header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+  }
+  .site-header .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .site-header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(22px, 5vw, 28px);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  .site-header p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .divider {
+    width: 40px;
+    height: 0.5px;
+    background: var(--accent);
+    margin: 1.5rem auto;
+    opacity: 0.5;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    margin-bottom: 2rem;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+  .progress-bar {
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--muted), var(--accent));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* Question card */
+  .q-card {
+    background: var(--card);
+    border: 0.5px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.5rem;
+    margin-bottom: 1.25rem;
+    animation: fadeIn 0.35s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .q-num {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .q-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(15px, 3.5vw, 17px);
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  /* Options */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1.5rem;
+  }
+  .opt {
+    background: rgba(255,255,255,0.03);
+    border: 0.5px solid rgba(201,168,240,0.15);
+    border-radius: 10px;
+    padding: 0.9rem 1.25rem;
+    font-size: 14px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    line-height: 1.6;
+  }
+  .opt:hover {
+    background: rgba(201,168,240,0.1);
+    border-color: rgba(201,168,240,0.4);
+    color: var(--text);
+  }
+  .opt.selected {
+    background: rgba(201,168,240,0.15);
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 0.5rem;
+  }
+  .btn {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: 10px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 0.5px solid rgba(201,168,240,0.2);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--text2); }
+  .btn-primary {
+    background: rgba(201,168,240,0.15);
+    border: 0.5px solid var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: rgba(201,168,240,0.25); }
+  .btn-primary:disabled { opacity: 0.3; cursor: default; }
+
+  /* Result */
+  .result-wrap { animation: fadeIn 0.5s ease; }
+
+  .result-hero {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+  }
+  .result-label {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .result-type {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(24px, 6vw, 32px);
+    font-weight: 400;
+    color: var(--soft);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+  .result-sub {
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .result-card {
+    background: var(--card);
+    border: 0.5px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .result-card h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+  .result-card p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.9;
+  }
+
+  .need-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .need-high { background: rgba(240,120,120,0.15); border: 0.5px solid rgba(240,120,120,0.4); color: #f09898; }
+  .need-mid  { background: rgba(201,168,240,0.12); border: 0.5px solid rgba(201,168,240,0.3); color: var(--accent); }
+  .need-low  { background: rgba(120,200,160,0.12); border: 0.5px solid rgba(120,200,160,0.3); color: #90c8a8; }
+
+  .cta-box {
+    background: rgba(201,168,240,0.07);
+    border: 0.5px solid rgba(201,168,240,0.25);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  .cta-box p { font-size: 13px; color: var(--text2); line-height: 1.8; margin-bottom: 1rem; }
+  .cta-keyword {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    color: var(--soft);
+    border: 0.5px solid var(--accent);
+    border-radius: 30px;
+    padding: 6px 24px;
+    display: inline-block;
+    letter-spacing: 0.15em;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 2.5rem;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="stars"></div>
+
+<div class="wrap">
+  <header class="site-header">
+    <div class="eyebrow">t e a t r e e &nbsp; p r e s e n t s</div>
+    <h1>波動タイプ診断</h1>
+    <div class="divider"></div>
+    <p>15の質問に答えてください。<br>あなたのエネルギーの状態とタイプがわかります。</p>
+  </header>
+
+  <!-- Quiz -->
+  <div id="quiz-section">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="q-count">1 / 15</span>
+        <span id="q-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    </div>
+
+    <div class="q-card" id="q-card">
+      <div class="q-num" id="q-num">Q 01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" id="prevBtn" onclick="prev()">← 戻る</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="next()" disabled>次へ →</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="result-section" class="result-wrap hidden"></div>
+
+  <footer class="footer">© salon teatree kashiwa &nbsp;All Rights Reserved</footer>
+</div>
+
+<script>
+// ---- Questions ----
+// Scoring: each answer has scores for types A/B/C/D and a "need" point (0 or 1)
+// Type A: 頑張りすぎタイプ（身体に溜まる）
+// Type B: 考えすぎタイプ（思考が止まらない）
+// Type C: 感じすぎタイプ（感情を抑えている）
+// Type D: 遮断タイプ（感覚が鈍くなっている）
+
+const Qs = [
+  {
+    text: "朝目が覚めたとき、最初に感じるのはどれに近いですか？",
+    opts: [
+      { label: "今日も起きられた、という穏やかな気持ち", s: [0,0,0,0], n: 0 },
+      { label: "今日もやることが多いな、という気持ち", s: [2,0,0,0], n: 1 },
+      { label: "昨日のことや今日の予定が頭をめぐる", s: [0,2,0,0], n: 1 },
+      { label: "なんとなく重い、気が進まない感覚", s: [0,0,2,0], n: 1 },
+      { label: "特に何も感じない、ただ起きる", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "誰かに「無理しないでね」と言われたとき、どう感じますか？",
+    opts: [
+      { label: "心配してくれてありがとう、と素直に嬉しい", s: [0,0,0,0], n: 0 },
+      { label: "無理はしていないつもり、と思う", s: [2,0,0,0], n: 1 },
+      { label: "なぜそう言われたのか気になって考える", s: [0,2,0,0], n: 0 },
+      { label: "少し胸が痛む、または涙が出そうになる", s: [0,0,2,0], n: 1 },
+      { label: "特に何も感じない", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "体の中で「重さや張り」を感じやすい場所はありますか？",
+    opts: [
+      { label: "特にない、全体的に軽やか", s: [0,0,0,0], n: 0 },
+      { label: "肩・首・背中", s: [2,0,0,0], n: 1 },
+      { label: "頭・こめかみ・目", s: [0,2,0,0], n: 1 },
+      { label: "胸・みぞおち・お腹", s: [0,0,2,0], n: 1 },
+      { label: "全体的にだるい、どこか特定できない", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "休む時間ができたとき、あなたはどうしますか？",
+    opts: [
+      { label: "ゆっくり過ごす、好きなことをして充電する", s: [0,0,0,0], n: 0 },
+      { label: "何かやらなきゃと感じてしまい、結局動いてしまう", s: [2,0,0,0], n: 1 },
+      { label: "どう過ごすか考えているうちに時間が過ぎる", s: [0,2,0,0], n: 0 },
+      { label: "罪悪感を感じながら休む", s: [0,0,2,0], n: 1 },
+      { label: "何もする気になれず、ぼーっとするだけ", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "人から何かを頼まれたとき、あなたの反応に近いものは？",
+    opts: [
+      { label: "自分の状況に合わせて判断できる", s: [0,0,0,0], n: 0 },
+      { label: "まず「どうすればできるか」を考える", s: [2,0,0,0], n: 0 },
+      { label: "引き受けるべきか、断るべきか頭で考える", s: [0,2,0,0], n: 0 },
+      { label: "断りたいけど断れない気持ちになる", s: [0,0,2,0], n: 1 },
+      { label: "面倒だと感じるが、感情はあまりわかない", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "「自分のために使う時間」について、どう感じていますか？",
+    opts: [
+      { label: "自分には必要不可欠なものとして大切にしている", s: [0,0,0,0], n: 0 },
+      { label: "他にやることがあるので後回しになる", s: [2,0,0,0], n: 1 },
+      { label: "何が「自分のため」なのかよくわからない", s: [0,2,0,0], n: 1 },
+      { label: "大切だとわかっているけど、なんか申し訳ない", s: [0,0,2,0], n: 1 },
+      { label: "特に何も感じない、必要性もあまり感じない", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "感情が動いたとき（悲しい・怒りなど）、あなたはどうしますか？",
+    opts: [
+      { label: "感じたままを受け取り、受け止める", s: [0,0,0,0], n: 0 },
+      { label: "とりあえず動いて紛らわす", s: [2,0,0,0], n: 0 },
+      { label: "なぜそう感じたのか原因を考える", s: [0,2,0,0], n: 0 },
+      { label: "外では出さず、ひとりになってから感じる", s: [0,0,2,0], n: 1 },
+      { label: "あまり感情が動いていないことに気づく", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "寝つきや眠りの質について、近いものを選んでください。",
+    opts: [
+      { label: "スムーズに眠れて、朝もすっきり目覚める", s: [0,0,0,0], n: 0 },
+      { label: "なかなか眠れない、または眠りが浅い", s: [2,0,0,0], n: 1 },
+      { label: "色々と考えてしまって眠れないことがある", s: [0,2,0,0], n: 1 },
+      { label: "眠れるけど、翌朝もすっきりしていない", s: [0,0,2,0], n: 1 },
+      { label: "眠れてはいるが、何か満たされない感じ", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "人と一緒に過ごした後の感覚に近いものを教えてください。",
+    opts: [
+      { label: "心地よい時間だった、充たされた感じがある", s: [0,0,0,0], n: 0 },
+      { label: "疲れたけどやり切った感じ", s: [2,0,0,0], n: 0 },
+      { label: "自分の言葉や行動を振り返って気になる", s: [0,2,0,0], n: 0 },
+      { label: "ぐったりする、または気持ちが揺れる", s: [0,0,2,0], n: 1 },
+      { label: "特に何も感じない", s: [0,0,0,2], n: 0 },
+    ]
+  },
+  {
+    text: "自分の身体の変化（疲れ・痛み・違和感）への気づきで近いものは？",
+    opts: [
+      { label: "小さなサインにも早めに気づいて対処できる", s: [0,0,0,0], n: 0 },
+      { label: "かなりひどくなってから気づく", s: [2,0,0,0], n: 1 },
+      { label: "気づいているが「気のせいかも」と後回しにする", s: [0,2,0,0], n: 1 },
+      { label: "敏感に感じるけど、どう対処すればいいかわからない", s: [0,0,2,0], n: 1 },
+      { label: "あまり気にならない、もしくは感じにくい", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "「このままでいいのかな」と感じることはありますか？",
+    opts: [
+      { label: "あまりない、今の自分の方向性を信じている", s: [0,0,0,0], n: 0 },
+      { label: "感じることはあるが、とにかく動いて考えないようにする", s: [2,0,0,0], n: 1 },
+      { label: "ずっと考えてしまって答えが出ない", s: [0,2,0,0], n: 1 },
+      { label: "誰かに話したくなるが、うまく言葉にできない", s: [0,0,2,0], n: 1 },
+      { label: "そのままにして、なんとなく流れている", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "今の自分を一番消耗させているものは何だと思いますか？",
+    opts: [
+      { label: "特にない、概ね充実している", s: [0,0,0,0], n: 0 },
+      { label: "やることの多さ、責任の重さ", s: [2,0,0,0], n: 1 },
+      { label: "考えすぎること、悩みが尽きないこと", s: [0,2,0,0], n: 1 },
+      { label: "感情の波、人間関係のしんどさ", s: [0,0,2,0], n: 1 },
+      { label: "よくわからない、何も楽しめていないこと", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "誰かに「助けを求める」ことについて、正直どう思いますか？",
+    opts: [
+      { label: "必要な時は頼ればいいし、そうする", s: [0,0,0,0], n: 0 },
+      { label: "自分でできるのに甘えみたいで気がひける", s: [2,0,0,0], n: 1 },
+      { label: "どこまで頼っていいかわからない", s: [0,2,0,0], n: 0 },
+      { label: "迷惑をかけたくなくて言い出せない", s: [0,0,2,0], n: 1 },
+      { label: "助けを求めるという発想がそもそもない", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "直感や「なんとなく」の感覚を信じることができますか？",
+    opts: [
+      { label: "はい、自分の感覚を信頼して動けている", s: [0,0,0,0], n: 0 },
+      { label: "考える前に身体が動いている感じはあるが、疲れも伴う", s: [2,0,0,0], n: 0 },
+      { label: "直感より理由や根拠を大事にしたい", s: [0,2,0,0], n: 0 },
+      { label: "感じてはいるが、それを信じていいか迷う", s: [0,0,2,0], n: 0 },
+      { label: "直感がよくわからない、感じにくい", s: [0,0,0,2], n: 1 },
+    ]
+  },
+  {
+    text: "今のあなたに最も近いものはどれですか？",
+    opts: [
+      { label: "全体的に整っている、自分らしく過ごせている", s: [0,0,0,0], n: 0 },
+      { label: "休みたいけど休めない（休み方がわからない）", s: [2,0,0,0], n: 1 },
+      { label: "考えることをやめたい", s: [0,2,0,0], n: 1 },
+      { label: "もっと気楽に毎日を過ごしたい", s: [0,0,2,0], n: 1 },
+      { label: "何かが足りない気がするけど、何かわからない", s: [0,0,0,2], n: 1 },
+    ]
+  },
+];
+
+// ---- Types ----
+const Types = {
+  E: {
+    name: "エネルギーが整っているタイプ",
+    sub: "波動が軽やかで、自分軸を保てている状態",
+    desc: `自分の感覚を信頼し、必要なときに休み、受け取ることができている状態です。身体・思考・感情のバランスが取れており、エネルギーが自然に流れています。日々の積み重ねが、今のあなたの状態をつくっています。`,
+    care: `今の自分の習慣や感覚を大切に過ごしてください。良い状態からさらにその質を深めるために、定期的に波動調整をされることをお勧めします。`,
+  },
+  A: {
+    name: "頑張り溜めタイプ",
+    sub: "身体にエネルギーの重さが蓄積している状態",
+    desc: `責任感が強く、つい自分で抱え込んでしまう傾向があります。「まだやれる」と思い続けているうちに、身体がしっかりとサインを出しています。休むことへの罪悪感や「もっとやらなければ」という感覚が、エネルギーの流れを滞らせています。`,
+    care: `まず身体に意識を向けることが大切です。頑張りをやめるのではなく、身体の声を無視しない練習から始めましょう。深呼吸、ゆっくりした動作、自分が「ほっとする」場所や時間を意図的につくることが助けになります。`,
+  },
+  B: {
+    name: "思考過多タイプ",
+    sub: "頭のエネルギーが回り続けている状態",
+    desc: `物事を深く考える力があり、分析が得意な方です。ただ、考えることが「安心」になっているため、頭が休まりにくくなっています。答えが出ないまま思考が回り続けることで、エネルギーが頭部に集中しやすい状態です。`,
+    care: `考えることから一度離れる体験が必要です。言葉や分析ではなく、「感じる」ことに軸を移してみましょう。身体を動かすこと、五感を使う体験（自然・音楽・料理など）が思考のループをやわらげます。`,
+  },
+  C: {
+    name: "感情抑制タイプ",
+    sub: "感情とエネルギーを無意識に押し込めている状態",
+    desc: `感受性が豊かで、人の気持ちに敏感です。ただ、感じることで「迷惑をかける」「弱く見られる」という意識から、感情を外に出しにくくなっています。胸やお腹にエネルギーが滞りやすい状態です。`,
+    care: `感じることは弱さではありません。日記に書く、信頼できる人に話す、泣きたいときに泣くなど、感情を「外に出す」小さな練習が助けになります。自分の気持ちをジャッジせずに受け取ることが第一歩です。`,
+  },
+  D: {
+    name: "感覚遮断タイプ",
+    sub: "エネルギーの感覚が薄くなっている状態",
+    desc: `長い間、自分の感覚よりも「こうあるべき」に合わせてきた可能性があります。感じることを後回しにし続けた結果、感覚そのものが鈍くなっています。無気力・無感動・何をしても満たされない感覚はそのサインです。`,
+    care: `「感じる」ことをゆっくり取り戻す時間が必要です。まずは自分が「心地よい」と感じるものを探すところから。エネルギー整体は、感覚の入り口を再び開く助けになります。`,
+  },
+};
+
+// ---- State ----
+let current = 0;
+let answers = new Array(Qs.length).fill(null);
+
+// ---- Stars ----
+(function(){
+  const c = document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const sz = Math.random()*2+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--a:${(Math.random()*0.5+0.1).toFixed(2)};--dur:${(Math.random()*3+2).toFixed(1)}s;animation-delay:${(Math.random()*3).toFixed(1)}s`;
+    c.appendChild(s);
+  }
+})();
+
+// ---- Render ----
+function render() {
+  const q = Qs[current];
+  document.getElementById('q-num').textContent = 'Q ' + String(current+1).padStart(2,'0');
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-count').textContent = (current+1) + ' / ' + Qs.length;
+  const pct = Math.round(current / Qs.length * 100);
+  document.getElementById('q-pct').textContent = pct + '%';
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+
+  const sel = answers[current];
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = sel === null;
+
+  const isLast = current === Qs.length - 1;
+  nextBtn.textContent = isLast ? '結果を見る →' : '次へ →';
+
+  const optWrap = document.getElementById('options');
+  optWrap.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (sel === i ? ' selected' : '');
+    btn.textContent = o.label;
+    btn.onclick = () => choose(i);
+    optWrap.appendChild(btn);
+  });
+
+  // re-animate
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = '';
+}
+
+function choose(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((b,j) => {
+    b.classList.toggle('selected', j===i);
+  });
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function next() {
+  if (answers[current] === null) return;
+  if (current < Qs.length - 1) {
+    current++;
+    render();
+  } else {
+    showResult();
+  }
+}
+
+function prev() {
+  if (current > 0) { current--; render(); }
+}
+
+// ---- Result ----
+function showResult() {
+  // Tally
+  const scores = {A:0,B:0,C:0,D:0};
+  let needTotal = 0;
+
+  Qs.forEach((q, qi) => {
+    const ans = answers[qi];
+    if (ans === null) return;
+    const o = q.opts[ans];
+    ['A','B','C','D'].forEach((k,ki) => { scores[k] += o.s[ki]; });
+    needTotal += o.n;
+  });
+
+  // Primary type
+  const keys = ['A','B','C','D'];
+  const totalScore = keys.reduce((sum, k) => sum + scores[k], 0);
+  let topKey;
+  if (totalScore <= 6) {
+    topKey = 'E'; // ポジティブ選択肢が多い = 整っているタイプ
+  } else {
+    topKey = keys.reduce((a,b) => scores[a] >= scores[b] ? a : b);
+  }
+  const type = Types[topKey];
+
+  // Need level
+  let needLevel, needLabel, needClass, needMsg;
+  if (needTotal >= 11) {
+    needLevel = 'high'; needLabel = '整体・エネルギーケアが特に必要な状態';
+    needClass = 'need-high';
+    needMsg = 'エネルギーの滞りが全体的に強い状態です。体とエネルギー、両方へのアプローチが助けになります。まずは一度、施術を受けてみてください。';
+  } else if (needTotal >= 6) {
+    needLevel = 'mid'; needLabel = 'エネルギーケアを取り入れるとよい時期';
+    needClass = 'need-mid';
+    needMsg = 'サインが出始めている段階です。早めのケアが滞りを深めずに済みます。今のうちに整えることをおすすめします。';
+  } else {
+    needLevel = 'low'; needLabel = '波動が整っている状態';
+    needClass = 'need-low';
+    needMsg = '今あなたの状態はとても良いです！エネルギー整体は日々さらされているエネルギーの浄化や、さらに深いエネルギー体へのアプローチが可能な施術です。CKワープエネルギー整体は、家系から引き継いでいる無意識の役割を無役にする唯一無二の方法を採用しています。定期的なメンテナンスで今よりもさらに波動を上げることができます。';
+  }
+
+  document.getElementById('quiz-section').classList.add('hidden');
+  const rs = document.getElementById('result-section');
+  rs.classList.remove('hidden');
+
+  rs.innerHTML = `
+    <div class="result-hero">
+      <div class="result-label">あなたの波動タイプ</div>
+      <div class="result-type">${type.name}</div>
+      <div class="result-sub">${type.sub}</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <span class="need-badge ${needClass}">${needLabel}</span>
+
+    <div class="result-card">
+      <h3>今のあなたの状態</h3>
+      <p>${type.desc}</p>
+    </div>
+
+    <div class="result-card">
+      <h3>自分でできるケアのヒント</h3>
+      <p>${type.care}</p>
+    </div>
+
+    <div class="result-card">
+      <h3>エネルギー整体との関わり</h3>
+      <p>${needMsg}</p>
+    </div>
+
+    <div class="cta-box">
+      <p>施術のご予約・ご質問は<br>インスタグラムのDMからどうぞ。<br>ご予約の際はこの診断結果をお知らせください。</p>
+      <div style="margin-top:1rem; font-size:12px; color:var(--muted);">© salon teatree kashiwa &nbsp;All Rights Reserved</div>
+    </div>
+  `;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ---- Init ----
+render();
+</script>
+</body>
+</html>
